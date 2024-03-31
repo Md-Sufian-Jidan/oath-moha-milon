@@ -8,6 +8,7 @@ const Register = () => {
         const email = e.target.email.value;
         const password = e.target.password.value;
         console.log(name , email, password);
+        
     };
     return (
         <div className="hero min-h-screen bg-base-200">

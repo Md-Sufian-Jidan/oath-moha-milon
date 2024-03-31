@@ -1,10 +1,19 @@
-import { createContext } from "react";
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import PropTypes from 'prop-types';
+import { createContext, useState } from 'react';
+import auth from '../Firebase/Firebase';
 
 export const AuthContext = createContext(null);
 
 const AuthProvider = ({children}) => {
-    const authInfo = {name : 'nodi sagor khal bill'}
+
+    const [user , setUser] = useState(null);
+
+    const createUser = () => {
+        return createUserWithEmailAndPassword(auth);
+    }
+
+    const authInfo = {name:'Nodi sagooooor'};
     return (
         <AuthContext.Provider value={authInfo}>
             {children}
@@ -13,6 +22,7 @@ const AuthProvider = ({children}) => {
 };
 
 export default AuthProvider;
+
 
 AuthProvider.propTypes = {
     children : PropTypes.node,
