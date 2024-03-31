@@ -1,19 +1,40 @@
-import { createUserWithEmailAndPassword } from 'firebase/auth';
 import PropTypes from 'prop-types';
-import { createContext, useState } from 'react';
+
+import { createContext, useEffect, useState } from 'react';
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import auth from '../Firebase/Firebase';
 
 export const AuthContext = createContext(null);
 
-const AuthProvider = ({children}) => {
+//create user in firebase
+const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
 
-    const [user , setUser] = useState(null);
+    const createUser = (email, password) => {
+        return createUserWithEmailAndPassword(auth , email, password);
+    };
 
-    const createUser = () => {
-        return createUserWithEmailAndPassword(auth);
-    }
+    const signInUser = (email,password) => {
+        return signInWithEmailAndPassword(auth , email, password)
+    };
 
-    const authInfo = {name:'Nodi sagooooor'};
+    const logOut = () => {
+        return signOut(auth);
+    };
+
+    //observe auth state change
+    useEffect(()=>{
+       const unSubscribe = onAuthStateChanged(auth, currentUser => {
+            setUser(currentUser);
+            console.log('current value of the current user', currentUser);
+        });
+        return () => {
+            unSubscribe();
+        }
+    },[])
+
+    const authInfo = {user, createUser , signInUser , logOut};
+
     return (
         <AuthContext.Provider value={authInfo}>
             {children}
@@ -23,9 +44,8 @@ const AuthProvider = ({children}) => {
 
 export default AuthProvider;
 
-
 AuthProvider.propTypes = {
-    children : PropTypes.node,
+    children: PropTypes.node,
 }
 
 /**
