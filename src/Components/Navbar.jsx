@@ -54,7 +54,6 @@ const Navbar = () => {
                     </>
                         : <Link to={'/login'}>
                             <button className="btn btn-sm">Login</button>
-
                         </Link>
                 }
             </div>
